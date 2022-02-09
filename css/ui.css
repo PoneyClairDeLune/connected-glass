@@ -29,3 +29,7 @@ div.content {
 	min-width: 1.5em;
 	background: #7f7f7f;
 } */
+
+a[download] {
+	display: none;
+}

@@ -21,11 +21,11 @@ HTMLElement.prototype.$a = function (selector) {
 	return this.querySelector && Array.from(this.querySelector(selector));
 };
 
-let canvas, context;
+let canvas, context, stateIndex, downloader = $e("a[download]");
 let fileReader = [new FileReader(), new FileReader()];
 let imageFile, imagePNG, imagePNG8, imageData;
 let tst, ctmFile, mediumWidth, mediumHeight, slicingMap = "", slicingParams = [], slices = [];
-let blobPool = [];
+self.blobPool = [];
 
 // Generate the correct slicing data
 self.genArea = function (width, height, sw, sh) {
@@ -52,7 +52,8 @@ self.drawState = function (instructions) {
 		let sIdx = tst.map.indexOf(e);
 		if (sIdx >= 0) {
 			let source = slices[sIdx], target = slicingParams[i];
-			console.debug(`${target.w == source.width ? (target.x) : (mediumWidth * (i % 3) - (mediumWidth - tst.slice.width))}, ${target.h == source.height ? (target.y) : (mediumHeight * Math.floor(i / 3) - (mediumHeight - tst.slice.height))}`);
+			console.debug(`${instructions}`);
+			//console.debug(`${target.w == source.width ? (target.x) : (mediumWidth * (i % 3) - (mediumWidth - tst.slice.width))}, ${target.h == source.height ? (target.y) : (mediumHeight * Math.floor(i / 3) - (mediumHeight - tst.slice.height))}`);
 			context.putImageData(source, (target.w == source.width ? (target.x) : (mediumWidth * (i % 3) - (mediumWidth - tst.slice.width))), (target.h == source.height ? (target.y) : (mediumHeight * Math.floor(i / 3) - (mediumHeight - tst.slice.height))));
 		};
 	});
@@ -98,4 +99,30 @@ $e("input").addEventListener("input", async function () {
 	let instructions = tst.features[parseInt(this.value) - tst.slice.start] || tst.map;
 	drawState(instructions);
 	console.debug(instructions);
+});
+self.genTexture = function () {
+	$e("input").value = stateIndex;
+	drawState(tst.features[stateIndex - tst.slice.start] || tst.map);
+	let blobFile = new Blob([new Uint8Array(UPNG.encode([context.getImageData(0, 0, canvas.width, canvas.height).data], canvas.width, canvas.height, 0))], {type: "image/png"});
+	blobPool.push(blobFile);
+	blobFile.url = URL.createObjectURL(blobFile);
+	stateIndex ++;
+	if (stateIndex <= tst.features.length) {
+		setTimeout(genTexture, 125);
+	};
+	downloader.href = blobFile.url;
+	downloader.download = `${stateIndex - 1}`;
+	downloader.click();
+};
+$e("button#slcgen").addEventListener("click", async function () {
+	downloader.href = `data:text/plain,${encodeURIComponent(ctmFile)}`;
+	downloader.download = `glass.properties`;
+	downloader.click();
+	blobPool.forEach(function (e) {
+		URL.revokeObjectURL(e.url);
+	});
+	delete self.blobPool;
+	self.blobPool = [];
+	stateIndex = tst.ctm.start;
+	genTexture();
 });
