@@ -3,5 +3,20 @@
 	<meta http-equiv="200" charset="utf-8" />
 	<meta content="true" name="HandheldFriendly" />
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<link rel="stylesheet" href="./libs/water.css" />
+	<link rel="stylesheet" href="./css/ui.css" />
+	<script src="./libs/browser_fs_access.min.js" type="module"></script>
+	<script src="./libs/upng.min.js"></script>
 	<title>Connected Glass Generator</title>
-</head><body></body>
+</head>
+<body>
+	<div class="content">
+		<canvas width="16" height="16"></canvas>
+		<div><span>Choose the original texture: </span><button id="imgsrc"></button></div>
+		<div><span>Choose textureStates.json: </span><button id="tsconf"></button></div>
+		<!--<div><span>Choose working directory: </span><button id="wkdir"></button></div>-->
+		<div><span>See the stage: </span><input type="number"></input></div>
+		<div><span>Start generation: </span><button id="slcgen"></button></div>
+	</div>
+	<script src="./js/ui.js" type="module"></script>
+</body>

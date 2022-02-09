@@ -1,0 +1,31 @@
+* {
+	--back: hsl(240, 10%, 10%);
+	--wbgc: hsl(240, 20%, 20%);
+	--font: #eee;
+}
+
+body {
+	background: var(--back);
+	color: var(--font);
+}
+
+canvas {
+	background: url('../img/checker.png');
+	background-repeat: repeat;
+	min-width: 64px;
+	min-height: 64px;
+}
+
+div.content {
+	padding: 32px;
+	background: var(--wbgc);
+	border: 0 solid;
+	border-radius: 8px;
+	box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+/* div.button {
+	display: inline-block;
+	min-height: 1em;
+	min-width: 1.5em;
+	background: #7f7f7f;
+} */
